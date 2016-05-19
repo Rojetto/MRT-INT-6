@@ -1,10 +1,3 @@
-/*
- * main.cpp
- *
- *  Created on: 19.05.2016
- *      Author: Paul
- */
-
 #include <iostream>
 #include <fstream>
 #include <cmath>
