@@ -11,26 +11,46 @@
 
 using namespace std;
 
+struct header {
+    char riff[4];
+    long dateigroesse;
+    char wave[4];
+    char fmt[4];
+    long chdatgroesse;
+    short wavetyp;
+    short kanal;
+    long samples_s;
+    long bytes_s;
+    short blockalign;
+    short bits_sample;
+    char data[4];
+    long groesse_daten;
+};
+
+enum typ {
+    SINUS, RECHTECK, DREIECK
+};
+
 const double PI = 3.14159265358979323846;
 const int abtastfrequenz = 44100;
 const double y_norm = 30000; // Normierte Amplitude
 const int n = 2; // Anzahl Oberschwingungen
-const int a[] = {1, 1, 1}; //Amplituden
+const int a[] = {1, 1, 0}; //Amplituden
 const double pl[] = {0, 0, 0}; //Phasenverschiebungen linker Kanal in Grad
 const double pr[] = {0, 0, 0}; //Phasenverschiebungen rechter Kanal in Grad
 const double signaldauer = 10; //Dauer des Signals in Sekunden
 
 char dateiname[] = "test.wav"; //Startwerte für Dateiname, Frequenz, Signalform
 double grundfrequenz = 440; //Frequenz in Hertz
-int signalform = 0; //0=Sinus, 1=Rechteck, 2=Dreieck
+typ signalform = RECHTECK;
 
 double signalwert(double t, double a, double f, double phi) {
     double y = sin(2.0 * PI * f * t + phi * PI / 180);
 
-    if (signalform == 1)
+    if (signalform == RECHTECK)
         y = (y > 0) ? 1 : ((y < 0) ? -1 : 0);
 
-    if (signalform == 2)
+    if (signalform == DREIECK)
         y = asin(y) * 2.0 / PI;
 
     return y * a;
@@ -38,22 +58,6 @@ double signalwert(double t, double a, double f, double phi) {
 
 void dateierzeugung() //Schreibt die Datei
 {
-    struct header    //erzeugen des Headers
-    {
-        char riff[4];
-        long dateigroesse;
-        char wave[4];
-        char fmt[4];
-        long chdatgroesse;
-        short wavetyp;
-        short kanal;
-        long samples_s;
-        long bytes_s;
-        short blockalign;
-        short bits_sample;
-        char data[4];
-        long groesse_daten;
-    };
     header h =
             {
                     {'R', 'I', 'F', 'F'},
