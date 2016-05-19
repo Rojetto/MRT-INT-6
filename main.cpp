@@ -13,18 +13,19 @@ using namespace std;
 
 const double PI = 3.14159265358979323846;
 const int abtastfrequenz = 44100;
-const short int a = 32000; //Amplitude
-const double pl = 0; //Phasenverschiebung linker Kanal
-const double pr = 0; //Phasenverschiebung rechter Kanal
-const int signaldauer = 10; //Dauer des Signals in Sekunden
+const double y_norm = 30000; // Normierte Amplitude
+const int n = 2; // Anzahl Oberschwingungen
+const int a[] = {1, 1, 1}; //Amplituden
+const double pl[] = {0, 0, 0}; //Phasenverschiebungen linker Kanal in Grad
+const double pr[] = {0, 0, 0}; //Phasenverschiebungen rechter Kanal in Grad
+const double signaldauer = 10; //Dauer des Signals in Sekunden
 
 char dateiname[] = "test.wav"; //Startwerte für Dateiname, Frequenz, Signalform
-int frequenz = 440; //Frequenz in Hertz
-int signalform = 2; //0=Sinus, 1=Rechteck, 2=Dreieck
+double grundfrequenz = 440; //Frequenz in Hertz
+int signalform = 0; //0=Sinus, 1=Rechteck, 2=Dreieck
 
-// |y| <= 1.0
-double normiertes_signal(double t) {
-    double y = sin(2.0 * PI * frequenz * t);
+double signalwert(double t, double a, double f, double phi) {
+    double y = sin(2.0 * PI * f * t + phi * PI / 180);
 
     if (signalform == 1)
         y = (y > 0) ? 1 : ((y < 0) ? -1 : 0);
@@ -32,7 +33,7 @@ double normiertes_signal(double t) {
     if (signalform == 2)
         y = asin(y) * 2.0 / PI;
 
-    return y;
+    return y * a;
 }
 
 void dateierzeugung() //Schreibt die Datei
@@ -74,14 +75,25 @@ void dateierzeugung() //Schreibt die Datei
 
     datei.write((char *) &h, sizeof(h)); //Schreibt header in Datei
 
+    double y_max = 0;
+    for (int i = 0; i <= n; i++) {
+        y_max += a[i];
+    }
+
     for (int k = 0; k < abtastfrequenz * signaldauer; k++) //Schreibe Samples
     {
         double t = (double) k / (double) abtastfrequenz;
-        short int kanallinks = a * normiertes_signal(t);
-        short int kanalrechts = a * normiertes_signal(t);
 
-        datei.write((char*) &kanallinks, sizeof(kanallinks));
-        datei.write((char*) &kanalrechts, sizeof(kanalrechts));
+        short kanallinks = 0;
+        short kanalrechts = 0;
+
+        for (int i = 0; i <= n; i++) {
+            kanallinks += (short) (signalwert(t, a[i], grundfrequenz * (i + 1), pl[i]) * y_norm / y_max);
+            kanalrechts += (short) (signalwert(t, a[i], grundfrequenz * (i + 1), pr[i]) * y_norm / y_max);
+        }
+
+        datei.write((char *) &kanallinks, sizeof(kanallinks));
+        datei.write((char *) &kanalrechts, sizeof(kanalrechts));
     }
 
     datei.close();
