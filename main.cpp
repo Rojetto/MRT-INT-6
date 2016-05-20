@@ -54,7 +54,7 @@ void dateierzeugung() //Schreibt die Datei
     header h =
             {
                     {'R', 'I', 'F', 'F'},
-                    signaldauer * 176400 + 36, //dateigroesse = signaldauer * bytes_s + headergroesse - 8
+                    (long) (signaldauer * 176400 + 36), //dateigroesse = signaldauer * bytes_s + headergroesse - 8
                     {'W', 'A', 'V', 'E'},
                     {'f', 'm', 't', ' '},
                     16,
@@ -65,7 +65,7 @@ void dateierzeugung() //Schreibt die Datei
                     4,
                     16,
                     {'d', 'a', 't', 'a'},
-                    signaldauer * 176400
+                    (long) (signaldauer * 176400)
             };
 
     ofstream datei(dateiname, std::ios::binary);
