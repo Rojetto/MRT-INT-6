@@ -28,13 +28,13 @@ const double PI = 3.14159265358979323846;
 const int abtastfrequenz = 44100;
 const double y_norm = 30000; // Normierte Amplitude
 const int n = 2; // Anzahl Oberschwingungen
-const int a[] = {1, 1, 0}; //Amplituden
+const int a[] = {1, 1, 1}; //Amplituden
 const double pl[] = {0, 0, 0}; //Phasenverschiebungen linker Kanal in Grad
 const double pr[] = {0, 0, 0}; //Phasenverschiebungen rechter Kanal in Grad
 const double signaldauer = 10; //Dauer des Signals in Sekunden
 const char dateiname[] = "test.wav"; //Startwerte für Dateiname, Frequenz, Signalform
 const double grundfrequenz = 440; //Frequenz in Hertz
-const typ signalform = RECHTECK;
+const typ signalform = SINUS;
 
 double signalwert(double t, double a, double f, double phi) {
     double y = sin(2.0 * PI * f * t + phi * PI / 180);
