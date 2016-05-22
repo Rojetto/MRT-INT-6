@@ -32,10 +32,9 @@ const int a[] = {1, 1, 0}; //Amplituden
 const double pl[] = {0, 0, 0}; //Phasenverschiebungen linker Kanal in Grad
 const double pr[] = {0, 0, 0}; //Phasenverschiebungen rechter Kanal in Grad
 const double signaldauer = 10; //Dauer des Signals in Sekunden
-
-char dateiname[] = "test.wav"; //Startwerte für Dateiname, Frequenz, Signalform
-double grundfrequenz = 440; //Frequenz in Hertz
-typ signalform = RECHTECK;
+const char dateiname[] = "test.wav"; //Startwerte für Dateiname, Frequenz, Signalform
+const double grundfrequenz = 440; //Frequenz in Hertz
+const typ signalform = RECHTECK;
 
 double signalwert(double t, double a, double f, double phi) {
     double y = sin(2.0 * PI * f * t + phi * PI / 180);
