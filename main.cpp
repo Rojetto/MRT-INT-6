@@ -36,6 +36,7 @@ const char dateiname[] = "test.wav"; //Startwerte für Dateiname, Frequenz, Sign
 const double grundfrequenz = 440; //Frequenz in Hertz
 const typ signalform = SINUS;
 
+// Zeit t [s], Amplitude a, Frequenz f [Hz], Phase phi [°]
 double signalwert(double t, double a, double f, double phi) {
     double y = sin(2.0 * PI * f * t + phi * PI / 180);
 
@@ -48,7 +49,8 @@ double signalwert(double t, double a, double f, double phi) {
     return y * a;
 }
 
-void dateierzeugung() //Schreibt die Datei
+//Schreibt die Datei
+void dateierzeugung()
 {
     header h =
             {
@@ -67,10 +69,11 @@ void dateierzeugung() //Schreibt die Datei
                     (long) (signaldauer * 176400)
             };
 
-    ofstream datei(dateiname, std::ios::binary);
+    ofstream datei(dateiname, ios::binary); // Dateistream in Binärmodus öffnen
 
     datei.write((char *) &h, sizeof(h)); //Schreibt header in Datei
 
+    // Maximale Amplitude berechnen
     double y_max = 0;
     for (int i = 0; i <= n; i++) {
         y_max += a[i];
