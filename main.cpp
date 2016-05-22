@@ -50,8 +50,10 @@ double signalwert(double t, double a, double f, double phi) {
 }
 
 //Schreibt die Datei
-void dateierzeugung()
-{
+void dateierzeugung() {
+    cout << "Signal " << signalform << " mit f0 = " << grundfrequenz << " Hz und " << n << " Obertoenen, Dauer " <<
+    signaldauer << " s" << endl;
+
     header h =
             {
                     {'R', 'I', 'F', 'F'},
@@ -70,14 +72,17 @@ void dateierzeugung()
             };
 
     ofstream datei(dateiname, ios::binary); // Dateistream in Binärmodus öffnen
+    cout << "Datei " << dateiname << " geoeffnet" << endl;
 
     datei.write((char *) &h, sizeof(h)); //Schreibt header in Datei
+    cout << "Dateiheader geschrieben" << endl;
 
     // Maximale Amplitude berechnen
     double y_max = 0;
     for (int i = 0; i <= n; i++) {
         y_max += a[i];
     }
+    cout << "Amplitude " << y_max << " wird auf " << y_norm << " normiert" << endl;
 
     for (int k = 0; k < abtastfrequenz * signaldauer; k++) //Schreibe Samples
     {
@@ -94,8 +99,10 @@ void dateierzeugung()
         datei.write((char *) &kanallinks, sizeof(kanallinks));
         datei.write((char *) &kanalrechts, sizeof(kanalrechts));
     }
+    cout << abtastfrequenz * signaldauer << " Samples geschrieben" << endl;
 
     datei.close();
+    cout << "Datei " << dateiname << " geschlossen" << endl;
 }
 
 int main() {
